@@ -35,7 +35,7 @@
     --mid: .338;       /* где по высоте картинки середина машин */
     position: absolute; width: var(--sw); height: calc(var(--sw) / var(--ratio));
     left: calc(50% - var(--sw) / 2);
-    top: calc(47% - var(--sw) / var(--ratio) * var(--mid));
+    top: calc(46% - var(--sw) / var(--ratio) * var(--mid));
   }
 
   .top {
@@ -63,13 +63,13 @@
   .content {
     position: absolute; inset: 0; z-index: 3;
     display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-    padding: calc(env(safe-area-inset-top) + clamp(104px, 15svh, 146px)) var(--pad) calc(20px + env(safe-area-inset-bottom));
+    padding: calc(env(safe-area-inset-top) + clamp(92px, 13svh, 128px)) var(--pad) calc(20px + env(safe-area-inset-bottom));
     pointer-events: none;
   }
   .content > * { pointer-events: auto; }
   .copy { text-align: center; }
-  h1 { margin: 0; font-weight: 600; font-size: clamp(22px, 7.4vw, 48px); line-height: 1.12; letter-spacing: -.005em; white-space: nowrap; }
-  .copy p { margin: .6em 0 0; font-size: clamp(15px, 4.6vw, 21px); color: var(--mist); }
+  h1 { margin: 0; font-weight: 600; font-size: clamp(21px, 6.9vw, 44px); line-height: 1.12; letter-spacing: -.005em; white-space: nowrap; }
+  .copy p { margin: .7em 0 0; font-size: clamp(15px, 4.2vw, 19px); color: var(--mist); }
 
   .actions { display: grid; gap: 12px; width: 100%; }
   .btn {
@@ -93,7 +93,7 @@
   @media (max-width: 400px) { :root { --pad: 18px; } }
   /* Невысокий экран телефона (браузер с панелями): машины чуть ниже и меньше, чтобы между текстом и залом осталось место под лампы */
   @media (max-aspect-ratio: 999/1000) and (min-aspect-ratio: 13/25) {
-    .stage { --sw: min(100vw, 560px); top: calc(52.5% - var(--sw) / var(--ratio) * var(--mid)); }
+    .stage { --sw: min(100vw, 560px); top: calc(51% - var(--sw) / var(--ratio) * var(--mid)); }
   }
   @media (max-width: 340px) {
     :root { --pad: 16px; }
@@ -104,7 +104,7 @@
   @media (min-aspect-ratio: 1/1) {
     :root { --pad: clamp(28px, 3.9vw, 76px); }
     .hero { min-height: 540px; }
-    .stage { --sw: min(84vw, 1300px, (100svh - 330px) * 2.649); --ratio: 1.7853; --mid: .386; top: calc(51% - var(--sw) / var(--ratio) * var(--mid)); }
+    .stage { --sw: min(76vw, 1240px, (100svh - 400px) * 2.649); --ratio: 1.7853; --mid: .386; top: calc(54% - var(--sw) / var(--ratio) * var(--mid)); }
     .top { align-items: center; padding-top: calc(clamp(20px, 2.9svh, 34px) + env(safe-area-inset-top)); }
     .brand { padding: 0; }
     .brand img { height: clamp(16px, 1.42vw, 25px); }
@@ -112,9 +112,9 @@
     .nav { position: static; flex-direction: row; justify-content: flex-end; padding: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; opacity: 1; visibility: visible; gap: clamp(22px, 3.3vw, 64px); font-size: clamp(14px, 1.2vw, 21px); color: #e8eef6; }
     .nav a { padding: 5px 0; border: 0; }
     .content { padding-top: calc(env(safe-area-inset-top) + clamp(86px, 12.6svh, 150px)); padding-bottom: calc(clamp(22px, 4.4svh, 46px) + env(safe-area-inset-bottom)); }
-    h1 { font-size: clamp(32px, 3.95vw, 74px); line-height: 1.08; }
+    h1 { font-size: clamp(30px, 3.6vw, 68px); line-height: 1.08; }
     h1 br { display: none; }
-    .copy p { font-size: clamp(17px, 1.6vw, 29px); margin-top: .5em; }
+    .copy p { font-size: clamp(16px, 1.4vw, 26px); margin-top: .5em; }
     .actions { width: auto; grid-auto-flow: column; grid-auto-columns: clamp(250px, 21.5vw, 350px); gap: clamp(14px, 1.4vw, 24px); }
     .btn { height: clamp(52px, 7svh, 68px); font-size: clamp(16px, 1.16vw, 21px); }
   }
@@ -195,7 +195,7 @@
      w — толщина, g — яркость, sp — скорость блика, который бежит по линии, ph — сдвиг фазы. */
   var LAYOUTS = {
     mobile:  { horizon: .247, ceil: .085, lampFade: [3.1, 3.5], lampGap: .40, lines: [{ y: .150, amp: .070, w: 1.15, g: 0, sp: .075, ph: .12 }] },
-    desktop: { horizon: .357, ceil: .235, lampFade: [2.6, 3.0], lampGap: .62, lines: [{ y: .285, amp: .085, w: 1.15, g: 0, sp: .060, ph: .12 }] }
+    desktop: { horizon: .357, ceil: .20, lampFade: [2.7, 3.1], lampGap: .62, lines: [{ y: .285, amp: .085, w: 1.15, g: 0, sp: .060, ph: .12 }] }
   };
   /* Волны разной длины (в ширинах экрана) и скорости, часть бежит навстречу: рисунок не повторяется */
   var WAVES = [
@@ -266,11 +266,11 @@
     '  float dw = clamp((uv.y - u_h) / max(1.0 - u_h, 0.001), 0.0, 1.0);' +
     '  float df = clamp((u_h - uv.y) / max(u_h, 0.001), 0.0, 1.0);' +
     '  vec3 top = vec3(0.006, 0.009, 0.016);' +
-    '  vec3 mid = vec3(0.026, 0.048, 0.098); vec3 wallC = vec3(0.010, 0.013, 0.020);' +
+    '  vec3 mid = vec3(0.026, 0.048, 0.098);' +
     '  vec3 bot = vec3(0.004, 0.006, 0.011);' +
-    '  vec3 col = mix(mix(mid * 1.5, mid * 0.42, pow(df, 0.8)), mix(wallC, top, pow(dw, 0.5)), wallSide);' +
+    '  vec3 col = mix(mix(mid * 1.5, mid * 0.42, pow(df, 0.8)), mix(vec3(0.006, 0.008, 0.012), top * 0.8, pow(dw, 0.5)), wallSide);' +
     '  vec2 q = vec2((uv.x - u_stage.x) / u_stage.z, (uv.y - u_stage.y) / (u_stage.z * u_aspect * 0.5));' +
-    '  col += (1.0 - wallSide) * vec3(0.012, 0.024, 0.052) * exp(-dot(q, q) * 1.5);' +
+    '  col += (1.0 - wallSide) * vec3(0.016, 0.034, 0.074) * exp(-dot(q, q) * 1.5);' +
     '  float vx = abs(uv.x - 0.5) * 2.0; col *= 1.0 - 0.5 * pow(vx, 2.4);' +
     /* зал: длинные потолочные лампы уходят вглубь и сходятся в перспективе, в полу — их размытое отражение */
     '  float yy = uv.y - u_h; float ay = max(abs(yy), 0.0005); float xx = (uv.x - u_stage.x) * u_aspect;' +
@@ -284,15 +284,35 @@
     '  lamp *= smoothstep(cH * 1.0, cH * (1.0 + (u_room.y - 1.0) * 0.75), ay) * (1.0 - smoothstep(cH * u_room.y * far, cH * u_room.z * far, ay));' +
     /* лампы на потолке гаснут, не доходя до подзаголовка: на любом экране они не заходят под текст */
     '  lamp *= 1.0 - up * smoothstep(u_text.x - u_text.y, u_text.x, uv.y);' +
-    /* d: 0 — дальние лампы у стены, 1 — ближние. Фронт света идёт от 0 к 1, потом весь ряд плавно гаснет */
-    '  float dd = clamp((1.0 - lz) / max(1.0 - 1.0 / (u_room.y * 1.6), 0.01), 0.0, 1.0);' +
-    '  float cyc = fract(u_time / 5.2);' +
-    '  float head = cyc / 0.55 * 1.15 - 0.08;' +
-    '  float on = 1.0 - smoothstep(head - 0.16, head, dd);' +
-    '  on *= 1.0 - smoothstep(0.66, 0.96, cyc);' +
-    '  float edge = exp(-pow((dd - head) / 0.07, 2.0)) * step(cyc, 0.62);' +
-    '  lamp *= 0.10 + 0.95 * on + 0.75 * edge;' +
+        /* лампы-секции: каждая полоса разбита на отдельные светильники; они загораются по одному из глубины
+       к зрителю — тук-тук-тук, — горят, потом так же по одному гаснут, и цикл повторяется */
+    '  float zs = (1.0 - lz) / 0.085;' +
+    '  float n = floor(zs); float fz = fract(zs);' +
+    '  float dash = smoothstep(0.10, 0.22, fz) * smoothstep(0.86, 0.74, fz);' +
+    '  float N = ceil((1.0 - 1.0 / (u_room.z * 1.6)) / 0.085) + 1.0;' +
+    '  float tick = u_time / 0.16;' +
+    '  float P = 2.0 * N + 5.0;' +
+    '  float p = mod(tick, P);' +
+    '  float onA = clamp(p - n, 0.0, 1.0);' +
+    '  float offA = clamp(p - (N + 2.0) - n, 0.0, 1.0);' +
+    '  float lit = smoothstep(0.0, 0.35, onA) * (1.0 - smoothstep(0.0, 0.35, offA));' +
+    '  float flash = exp(-pow((p - n - 0.25) / 0.35, 2.0)) * step(p, N + 1.0);' +
+    '  lamp *= dash * (0.06 + 0.94 * lit + 0.6 * flash);' +
     '  col += vec3(0.74, 0.86, 1.0) * lamp * mix(0.20, 0.95, up);' +
+    /* дальняя стена: тусклая печатная плата, по дорожкам бегут импульсы тока */
+    '  float wallM = up * (1.0 - smoothstep(cH * 0.97, cH, yy)) * smoothstep(0.0, 0.012, yy);' +
+    '  vec2 g = vec2((uv.x - 0.5) * u_aspect, uv.y) / 0.0095; vec2 id = floor(g); vec2 f = fract(g);' +
+    '  float h1 = hash(id), h2 = hash(id + 7.13), hr = hash(vec2(id.y, 3.7));' +
+    '  float th = step(0.30, h1) * step(0.40, hr) * smoothstep(0.14, 0.05, abs(f.y - 0.5));' +
+    '  float tv = step(0.80, h2) * smoothstep(0.14, 0.05, abs(f.x - 0.5)) * step(0.5, f.y + step(0.5, hash(id + 2.9)));' +
+    '  float node = step(0.32, h1) * step(0.78, h2) * smoothstep(0.30, 0.16, length(f - 0.5));' +
+    '  float trace = max(max(th, tv), node);' +
+    '  float pos = fract(g.x * 0.022 - u_time * (0.18 + 0.22 * hash(vec2(id.y, 9.1))) + hash(vec2(id.y, 1.9)));' +
+    '  float cur = th * exp(-pow((pos - 0.5) / 0.010, 2.0));' +
+    '  float posv = fract(g.y * 0.08 + u_time * 0.3 + hash(vec2(id.x, 5.3)));' +
+    '  cur += tv * exp(-pow((posv - 0.5) / 0.03, 2.0)) * 0.7;' +
+    '  float farW = 1.0 - 0.6 * smoothstep(0.0, cH, yy);' +
+    '  col += wallM * farW * (vec3(0.014, 0.026, 0.048) * trace + vec3(0.18, 0.55, 0.85) * cur * 0.55 + vec3(0.05, 0.12, 0.2) * node * 0.2);' +
     
     /* швы плит на полу и потолке в той же перспективе: по ним читается, что это плоскости, а не пустота */
     '  float gx = u_room.w * 0.5;' +
@@ -555,7 +575,7 @@
   /* Где стоит каждая машина на сцене (доли сцены): l, r — левый и правый край машины, b — низ колёс,
      z — насколько она близко (ближняя двигается сильнее). Порядок в списке — порядок отрисовки, дальние первыми. */
   var PLACE = {
-    mobile:  [{ id: 'zeekr', l: .015, r: .475, b: .380, z: .45 }, { id: 'li', l: .525, r: .985, b: .352, z: .40 }, { id: 'tesla', l: .170, r: .830, b: .660, z: 1 }],
+    mobile:  [{ id: 'zeekr', l: .010, r: .480, b: .385, z: .45 }, { id: 'li', l: .520, r: .990, b: .355, z: .40 }, { id: 'tesla', l: .150, r: .850, b: .680, z: 1 }],
     desktop: [{ id: 'zeekr', l: .070, r: .420, b: .452, z: .45 }, { id: 'li', l: .570, r: .938, b: .440, z: .40 }, { id: 'tesla', l: .280, r: .780, b: .723, z: 1 }]
   };
 
