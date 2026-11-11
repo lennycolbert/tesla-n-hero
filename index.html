@@ -91,6 +91,10 @@
   .btn:focus-visible { border-radius: 15px; }
 
   @media (max-width: 400px) { :root { --pad: 18px; } }
+  /* Невысокий экран телефона (браузер с панелями): машины чуть ниже и меньше, чтобы между текстом и залом осталось место под лампы */
+  @media (max-aspect-ratio: 999/1000) and (min-aspect-ratio: 13/25) {
+    .stage { --sw: min(90vw, 560px); top: calc(56.5% - var(--sw) / var(--ratio) * var(--mid)); }
+  }
   @media (max-width: 340px) {
     :root { --pad: 16px; }
     .top { gap: 10px; }
@@ -190,7 +194,7 @@
      ceil — где стена встречается с потолком, lampFade — до какой высоты видны ряды ламп, lampGap — шаг ламп в ряду,
      w — толщина, g — яркость, sp — скорость блика, который бежит по линии, ph — сдвиг фазы. */
   var LAYOUTS = {
-    mobile:  { horizon: .247, ceil: -.02, lampFade: [1.72, 1.95], lampGap: .62, lines: [{ y: .240, amp: .070, w: 1.15, g: 1, sp: .075, ph: .12 }] },
+    mobile:  { horizon: .247, ceil: -.02, lampFade: [1.72, 1.95], lampGap: .62, lines: [{ y: .150, amp: .070, w: 1.15, g: 1, sp: .075, ph: .12 }] },
     desktop: { horizon: .357, ceil: .11, lampFade: [1.40, 1.47], lampGap: 1.0, lines: [{ y: .285, amp: .085, w: 1.15, g: 1, sp: .060, ph: .12 }] }
   };
   /* Волны разной длины (в ширинах экрана) и скорости, часть бежит навстречу: рисунок не повторяется */
@@ -254,7 +258,7 @@
      мягкое пятно света за машинами и под курсором, зерно против полос на градиенте. */
   var BG_FS = HP +
     'varying vec2 v_tc; uniform sampler2D u_tex; uniform vec2 u_px;' +
-    'uniform float u_h, u_gain, u_aspect, u_time; uniform vec3 u_ptr; uniform vec3 u_stage; uniform vec4 u_room;' +
+    'uniform float u_h, u_gain, u_aspect, u_time; uniform vec3 u_ptr; uniform vec3 u_stage; uniform vec4 u_room; uniform vec2 u_text;' +
     'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }' +
     'void main(){' +
     '  vec2 uv = v_tc;' +
@@ -278,6 +282,8 @@
     '  float lamp = smoothstep(1.0, 0.3, dl) + 0.32 * exp(-dl * dl * 0.10);' +
     '  float far = mix(1.6, 1.0, up);' +
     '  lamp *= smoothstep(cH * 1.0, cH * (1.0 + (u_room.y - 1.0) * 0.75), ay) * (1.0 - smoothstep(cH * u_room.y * far, cH * u_room.z * far, ay));' +
+    /* лампы на потолке гаснут, не доходя до подзаголовка: на любом экране они не заходят под текст */
+    '  lamp *= 1.0 - up * smoothstep(u_text.x - u_text.y, u_text.x, uv.y);' +
     '  col += vec3(0.74, 0.86, 1.0) * lamp * mix(0.20, 0.95, up);' +
     '  col += vec3(0.010, 0.019, 0.040) * up * smoothstep(0.0, cH, ay) * (1.0 - smoothstep(cH, cH * 1.25, ay));' +
     /* швы плит на полу и потолке в той же перспективе: по ним читается, что это плоскости, а не пустота */
@@ -330,7 +336,7 @@
       G = {
         line: program(gl, LINE_VS, LINE_FS, ['u_res', 'u_hw', 'u_time', 'u_seed', 'u_gain', 'u_core', 'u_reveal', 'u_pulse', 'u_burst', 'u_ptr']),
         blur: program(gl, QUAD_VS, BLUR_FS, ['u_tex', 'u_dir']),
-        bg: program(gl, QUAD_VS, BG_FS, ['u_tex', 'u_px', 'u_h', 'u_gain', 'u_aspect', 'u_time', 'u_ptr', 'u_stage', 'u_room']),
+        bg: program(gl, QUAD_VS, BG_FS, ['u_tex', 'u_px', 'u_h', 'u_gain', 'u_aspect', 'u_time', 'u_ptr', 'u_stage', 'u_room', 'u_text']),
         vbo: gl.createBuffer(), quad: gl.createBuffer(), a: null, b: null
       };
       gl.bindBuffer(gl.ARRAY_BUFFER, G.quad);
@@ -357,6 +363,9 @@
     S.hw = (name === 'mobile' ? 5.2 : Math.max(5.4, w / 250)) * view.dpr;
     S.floorV = 1 - (view.sy + S.layout.horizon * view.sh) / h;
     S.wallH = (S.layout.horizon - S.layout.ceil) * view.sh / h;
+    var copyEl = hero.querySelector('.copy');
+    S.textV = copyEl ? 1 - (copyEl.getBoundingClientRect().bottom - hr.top + 12) / h : 1;   /* лампы гаснут за 12 px до подзаголовка */
+    S.textFade = 34 / h;
     var cw = Math.round(w * view.dpr), ch = Math.round(h * view.dpr);
     if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
     var lw = Math.max(2, Math.round(cw / 4)), lh = Math.max(2, Math.round(ch / 4));
@@ -442,6 +451,7 @@
     gl.uniform1f(ub.u_aspect, view.w / view.h);
     gl.uniform1f(ub.u_time, S.time % 1000);
     gl.uniform3f(ub.u_ptr, pointer.x / view.w, 1 - pointer.y / view.h, S.heat);
+    gl.uniform2f(ub.u_text, S.textV, S.textFade);
     gl.uniform4f(ub.u_room, S.wallH, S.layout.lampFade[0], S.layout.lampFade[1], S.layout.lampGap);
     gl.uniform3f(ub.u_stage, (view.sx + view.sw / 2) / view.w, 1 - (view.sy + view.sh * .36) / view.h, view.sw / view.w * .62);
     drawQuad(G.bg);
